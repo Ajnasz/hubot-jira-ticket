@@ -55,7 +55,7 @@ function findIssue (ticket) {
 
 function send (robot, res, issue) {
 	const ticketURL = getUrlForTicket(issue.key);
-	if (has(robot, '.adapter.client.chat.postMessage')) {
+	if (has(robot, 'adapter.client.chat.postMessage')) {
 		robot.adapter.client.chat.postMessage(res.user.room, '', {
 			attachments: [
 				{
