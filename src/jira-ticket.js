@@ -23,8 +23,6 @@ const config = Object.freeze({
 	password: process.env.HUBOT_JIRA_PASSWORD
 });
 
-const ISSUE_NOT_FOUND = 'Invalid issue number.';
-
 const projects = (process.env.HUBOT_JIRA_PROJECTS || '').split(/[ ,]/g)
 	.map(project => project.trim())
 	.filter(project => project !== '');
@@ -53,43 +51,43 @@ function findIssue (ticket) {
 	});
 }
 
-function send (robot, res, issue) {
-	const ticketURL = getUrlForTicket(issue.key);
-	if (has(robot, 'adapter.client.chat.postMessage')) {
-		robot.adapter.client.chat.postMessage(res.user.room, '', {
-			attachments: [
-				{
-					title: issue.fields.summary,
-					/* eslint-disable camelcase */
+function send (robot, res, issues) {
+	if (has(robot, 'adapter.client.web')) {
+
+		robot.adapter.client.web.chat.postMessage(res.envelope.room || res.envelope.id, '', {
+			/* eslint-disable camelcase */
+			as_user: true,
+			link_names: 1,
+			attachments: issues.map(issue => {
+				const ticketURL = getUrlForTicket(issue.key);
+
+				return {
+					title: `${issue.key} ${issue.fields.summary}`,
 					title_link: ticketURL,
-					/* eslint-enable camelcase */
 					text: issue.fields.description
-				}
-			]
+				};
+			})
+			/* eslint-enable camelcase */
 		});
 	} else {
-		res.send(`${ticketURL} ${issue.fields.summary}`);
+		issues.forEach(issue => {
+			const ticketURL = getUrlForTicket(issue.key);
+
+			res.send(`${ticketURL} ${issue.fields.summary}`);
+		});
 	}
 }
 
 module.exports = function (robot) {
 	robot.hear(regexp, function (res) {
-		res.match
-			.map(s => s.trim())
-			.forEach(function (ticket) {
-				findIssue(ticket)
-					.then((issue) => {
-						send(robot, res, issue);
-					}).catch(err => {
-						robot.logger.debug(`${ticket} - ${err}`);
-
-						if (err === ISSUE_NOT_FOUND) {
-							res.send(`${ticket} not found`);
-						} else {
-							const ticketURL = getUrlForTicket(ticket);
-							res.send(`${ticket} ${ticketURL}`);
-						}
-					});
+		let requests = res.match.map(s => s.trim()).map(function (ticket) {
+			return findIssue(ticket).catch(err => {
+				robot.logger.error(err);
+				return null;
 			});
+		});
+		Promise.all(requests).then(issues => {
+			send(robot, res, issues.filter(i => i !== null));
+		}).catch(err => robot.logger.error(err));
 	});
 };
