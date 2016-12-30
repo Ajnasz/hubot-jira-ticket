@@ -14,6 +14,7 @@
 
 const url = require('url');
 const has = require('object-has');
+const at = require('object-at');
 
 const JiraApi = require('jira').JiraApi;
 const config = Object.freeze({
@@ -62,9 +63,17 @@ function send (robot, res, issues) {
 				const ticketURL = getUrlForTicket(issue.key);
 
 				return {
+					author: at(issue, 'fields.createor.displayName'),
 					title: `${issue.key} ${issue.fields.summary}`,
 					title_link: ticketURL,
-					text: issue.fields.description
+					text: issue.fields.description,
+					fields: [
+						{
+							title: 'Status',
+							value: at(issue, 'fields.status.name'),
+							short: false
+						}
+					].filter(f => !!f.value)
 				};
 			})
 			/* eslint-enable camelcase */

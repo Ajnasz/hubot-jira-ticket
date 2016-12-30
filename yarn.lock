@@ -684,7 +684,7 @@ is-length@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-length/-/is-length-1.0.1.tgz#57c933e5a045cea36b20c8c3b1f24aabe820d45e"
 
-is-nil@^1.0.0:
+is-nil@^1.0.0, is-nil@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-nil/-/is-nil-1.0.1.tgz#2daba29e0b585063875e7b539d071f5b15937969"
 
@@ -908,6 +908,13 @@ noptify@~0.0.3:
 oauth@^0.9.11:
   version "0.9.14"
   resolved "https://registry.yarnpkg.com/oauth/-/oauth-0.9.14.tgz#c5748883a40b53de30ade9cabf2100414b8a0971"
+
+object-at@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/object-at/-/object-at-1.0.1.tgz#626ee1f4ce734c368a8eb8213d2b54e57aa6a25c"
+  dependencies:
+    is-nil "^1.0.1"
+    to-path "^1.0.1"
 
 object-has@^1.0.2:
   version "1.0.2"
@@ -1199,7 +1206,7 @@ to-iso-string@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/to-iso-string/-/to-iso-string-0.0.2.tgz#4dc19e664dfccbe25bd8db508b00c6da158255d1"
 
-to-path@^1.0.0:
+to-path@^1.0.0, to-path@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/to-path/-/to-path-1.0.1.tgz#ade88449c855925aa6464e33ff92f0b8fc5bcb8a"
   dependencies:
