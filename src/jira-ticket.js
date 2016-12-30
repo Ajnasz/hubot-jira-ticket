@@ -65,8 +65,8 @@ function send (robot, res, issues) {
 
 				return {
 					fallback: `${ticketURL} ${at(issue, 'description')}`,
-					author_name: at(issue, 'fields.creator.displayName'),
-					author_icon: at(issue, 'fields.creator.avatarUrls["48x48"]'),
+					author_name: at(issue, 'fields.assignee.displayName'),
+					author_icon: at(issue, 'fields.assignee.avatarUrls["48x48"]'),
 					title: `${at(issue, 'key')} ${at(issue, 'fields.summary')}`,
 					title_link: ticketURL,
 					text: issue.fields.description,
