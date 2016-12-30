@@ -61,10 +61,13 @@ function send (robot, res, issues) {
 			link_names: 1,
 			attachments: issues.map(issue => {
 				const ticketURL = getUrlForTicket(issue.key);
+				const date = new Date(at(issue, 'fields.updated')).getTime();
 
 				return {
-					author: at(issue, 'fields.createor.displayName'),
-					title: `${issue.key} ${issue.fields.summary}`,
+					fallback: `${ticketURL} ${at(issue, 'description')}`,
+					author: at(issue, 'fields.creator.displayName'),
+					author_icon: at(issue, 'fields.creator.avatarUrls["48x48"]'),
+					title: `${at(issue.key) }${at(issue, 'fields.summary')}`,
 					title_link: ticketURL,
 					text: issue.fields.description,
 					fields: [
@@ -73,7 +76,9 @@ function send (robot, res, issues) {
 							value: at(issue, 'fields.status.name'),
 							short: false
 						}
-					].filter(f => !!f.value)
+					].filter(f => !!f.value),
+					footer: at(issue, 'fields.project.name'),
+					ts: isNaN(date) ? void(0) : date
 				};
 			})
 			/* eslint-enable camelcase */
