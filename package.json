@@ -1,7 +1,7 @@
 {
   "name": "hubot-jira-ticket",
   "description": "A hubot script to find and display jira issue links and it's title",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": "Lajos Koszti <ajnasz@ajnasz.hu>",
   "license": "MIT",
   "keywords": "hubot, hubot-script, jira",
